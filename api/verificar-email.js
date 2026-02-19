@@ -17,11 +17,10 @@ async function getCaktoToken() {
   }
 
   const params = new URLSearchParams();
-  params.append('grant_type', 'client_credentials');
   params.append('client_id', CAKTO_CLIENT_ID);
   params.append('client_secret', CAKTO_CLIENT_SECRET);
 
-  const res = await fetch('https://api.cakto.com.br/oauth/token/', {
+  const res = await fetch('https://api.cakto.com.br/public_api/token/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params.toString(),
