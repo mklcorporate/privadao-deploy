@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Privadao - mayckaodesafio</title>
+
+  <meta name="description" content="Privadao - Acesso exclusivo ao conteúdo de mayckaodesafio">
+  <meta name="author" content="Privadao">
+  <meta property="og:title" content="Privadao - mayckaodesafio">
+  <meta property="og:description" content="Acesse o conteúdo exclusivo de mayckaodesafio">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@privadao">
+  <meta name="twitter:image" content="/og-image.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f0f5fa;
+      --card: #ffffff;
+      --foreground: #1e293b;
+      --muted: #64748b;
+      --border: #d6e3f0;
+      --accent: #3b82f6;
+      --accent-light: #93c5fd;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #7dd3fc 100%);
+      --shadow-card: 0 2px 16px rgba(59, 130, 246, 0.08);
+      --shadow-button: 0 4px 14px rgba(59, 130, 246, 0.3);
+      --radius: 1rem;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--foreground);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 28rem;
+      margin: 0 auto;
+      padding-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 32rem;
+        padding-top: 2rem;
+      }
+
+      .cover-img {
+        height: 12rem;
+        border-radius: 1.5rem;
+      }
+
+      .avatar-wrap {
+        width: 7rem;
+        height: 7rem;
+        top: 8rem;
+        border-width: 4px;
+      }
+
+      .stats-row {
+        top: 12.75rem;
+      }
+
+      .profile-info {
+        padding-top: 3rem;
+      }
+
+      .profile-name {
+        font-size: 1.75rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 36rem;
+        padding-top: 3rem;
+      }
+
+      .cover-img {
+        height: 14rem;
+      }
+
+      .avatar-wrap {
+        width: 8rem;
+        height: 8rem;
+        top: 9.5rem;
+      }
+
+      .stats-row {
+        top: 14.75rem;
+        gap: 1.25rem;
+        font-size: 0.875rem;
+      }
+
+      .profile-info {
+        padding-top: 3.5rem;
+      }
+
+      .profile-name {
+        font-size: 2rem;
+      }
+
+      .sub-card {
+        margin: 0 1.5rem;
+      }
+
+      .content-card {
+        margin: 1.5rem;
+      }
+
+      .media-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .btn-cta {
+        font-size: 1.125rem;
+        padding: 1rem;
+      }
+    }
+
+    /* ===== AGE GATE ===== */
+    .age-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1.5rem;
+    }
+
+    .age-overlay.hidden { display: none; }
+
+    .age-card {
+      background: #fff;
+      max-width: 26rem;
+      width: 100%;
+      border-radius: 1.25rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      animation: fadeUp 0.4s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .age-card h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-bottom: 0.5rem;
+    }
+
+    .age-card p {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .age-options {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .age-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      color: var(--foreground);
+    }
+
+    .age-options input[type="radio"] {
+      accent-color: var(--accent);
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .btn-age {
+      width: 100%;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-age:hover:not(:disabled) { opacity: 0.95; }
+    .btn-age:active:not(:disabled) { transform: scale(0.98); }
+    .btn-age:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ===== BLURRED BG FOR AGE GATE ===== */
+    .page-content.blurred {
+      filter: blur(12px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ===== COVER + AVATAR ===== */
+    .cover-section {
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+
+    .cover-img {
+      display: block;
+      width: 100%;
+      height: 15rem;
+      object-fit: cover;
+      object-position: center center;
+      border-radius: 0 0 1.5rem 1.5rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #7dd3fc 50%, #bae6fd 100%);
+    }
+
+    .avatar-wrap {
+      position: absolute;
+      left: 1rem;
+      top: 12.5rem;
+      width: 5.75rem;
+      height: 5.75rem;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      background: var(--bg);
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+
+    .stats-row {
+      position: absolute;
+      top: 15.5rem;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.8125rem;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* ===== PROFILE INFO ===== */
+    .profile-info {
+      padding: 2rem 1rem 1rem;
+    }
+
+    .profile-name-row {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--foreground);
+    }
+
+    .verified-badge {
+      width: 1.625rem;
+      height: 1.625rem;
+      color: var(--accent);
+    }
+
+    .profile-handle {
+      color: var(--foreground);
+      font-size: 1rem;
+      margin-top: 0.125rem;
+    }
+
+    .profile-bio {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: #000;
+    }
+
+    .btn-readmore {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.25rem;
+      padding: 0;
+    }
+
+    .btn-readmore:hover { text-decoration: underline; }
+
+    /* ===== SUBSCRIPTION CARD ===== */
+    .sub-card {
+      margin: 0 1rem;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .sub-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sub-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .sub-title-row svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--accent);
+    }
+
+    .sub-title-row h2 {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--foreground);
+    }
+
+    .sub-quote {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(219, 234, 254, 0.5);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+    }
+
+    .sub-quote-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--accent-gradient);
+    }
+
+    .sub-quote-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sub-quote-avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .sub-quote p {
+      font-size: 0.875rem;
+      color: var(--foreground);
+      line-height: 1.4;
+    }
+
+    .sub-body { padding: 1rem; }
+
+    .sub-save-text {
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-cta {
+      display: block;
+      width: 100%;
+      padding: 0.9375rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.0625rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      transition: opacity 0.2s, transform 0.2s;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-cta:hover { opacity: 0.95; }
+    .btn-cta:active { transform: scale(0.98); }
+
+    .sub-original-price {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--foreground);
+      margin-top: 0.5rem;
+    }
+
+    .sub-original-price span { text-decoration: line-through; }
+
+    /* ===== PLANS TOGGLE ===== */
+    .plans-toggle {
+      border-top: 1px solid var(--border);
+    }
+
+    .plans-toggle-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: none;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--foreground);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .plans-toggle-btn:hover { background: rgba(219, 234, 254, 0.4); }
+
+    .plans-toggle-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--muted);
+      transition: transform 0.3s;
+    }
+
+    .plans-toggle-btn.open svg { transform: rotate(180deg); }
+
+    .plans-list {
+      padding: 0 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .plans-list.hidden { display: none; }
+
+    .btn-plan {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.9375rem 1.25rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-plan:hover { opacity: 0.95; }
+    .btn-plan:active { transform: scale(0.98); }
+
+    /* ===== CONTENT TABS ===== */
+    .content-card {
+      margin: 1rem;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-btn svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .tab-content { padding: 1rem; }
+
+    .posts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .posts-grid img {
+      width: 100%;
+      border-radius: 0.75rem;
+      object-fit: contain;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .media-item {
+      aspect-ratio: 1;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #dbeafe;
+      position: relative;
+    }
+
+    .media-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .lock-overlay svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    /* ===== POST PLACEHOLDER ===== */
+    .post-placeholder {
+      width: 100%;
+      aspect-ratio: 4/5;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* ===== BLURRED CONTENT ITEMS ===== */
+    .blurred-post {
+      position: relative;
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+
+    .blurred-post img,
+    .blurred-post video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(14px) brightness(0.85);
+      transform: scale(1.1);
+      pointer-events: none;
+    }
+
+    .blurred-post .lock-badge {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.18);
+      z-index: 2;
+    }
+
+    .blurred-post .lock-badge svg {
+      width: 2rem;
+      height: 2rem;
+      color: #fff;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    .blurred-post .lock-badge span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .blurred-post.post-item {
+      aspect-ratio: 4/5;
+    }
+
+    .blurred-post.media-thumb {
+      aspect-ratio: 1;
+    }
+
+    .video-thumb {
+      position: relative;
+    }
+
+    .video-thumb .play-icon {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      z-index: 3;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-thumb .play-icon svg {
+      width: 0.875rem;
+      height: 0.875rem;
+      color: #fff;
+      filter: none;
+    }
+
+    /* ===== BOTAO JA SOU ASSINANTE ===== */
+    .btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      border: 2px solid var(--accent);
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-login:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ===== MODAL DE LOGIN ===== */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .login-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .login-card {
+      background: #fff;
+      max-width: 26rem;
+      width: 100%;
+      border-radius: 1.25rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      animation: fadeUp 0.4s ease;
+    }
+
+    .login-card h2 {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-bottom: 0.375rem;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--foreground);
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    .login-input:focus {
+      border-color: var(--accent);
+    }
+
+    .login-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 0.875rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      transition: opacity 0.2s, transform 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-login-submit:hover:not(:disabled) { opacity: 0.95; }
+    .btn-login-submit:active:not(:disabled) { transform: scale(0.98); }
+    .btn-login-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .login-error {
+      color: #ef4444;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      min-height: 1.25rem;
+    }
+
+    .login-close {
+      position: absolute;
+      top: -0.5rem;
+      right: -0.5rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: none;
+      background: var(--foreground);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card-wrap {
+      position: relative;
+    }
+
+    .login-spinner {
+      display: inline-block;
+      width: 1.125rem;
+      height: 1.125rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== UTILITIES ===== */
+    .hidden { display: none !important; }
+
+    @media (min-width: 640px) {
+      .cover-img { border-radius: 1.5rem; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- ========== PAGE CONTENT ========== -->
+<div class="page-content" id="pageContent">
+  <div class="container">
+
+    <!-- COVER + AVATAR -->
+    <div class="cover-section">
+      <!-- Cover: substitua src pela imagem de capa -->
+      <img src="images/capa_real.jpg" alt="Capa" class="cover-img">
+
+      <div class="avatar-wrap" id="avatarWrap">
+        <img src="images/perfil.jpg" alt="mayckaodesafio">
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>156</span>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>42</span>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>184</span>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>38.1K</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE INFO -->
+    <div class="profile-info">
+      <div class="profile-name-row">
+        <h1 class="profile-name">mayckaodesafio</h1>
+        <svg class="verified-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <p class="profile-handle">@mayckaodesafio</p>
+      <p class="profile-bio" id="bioText">Tudo que eu não posto em nenhum outro lugar tá aqui. Vem espiar...</p>
+      <button class="btn-readmore" id="btnReadmore" onclick="toggleBio()">Ler mais</button>
+    </div>
+
+    <!-- SUBSCRIPTION CARD -->
+    <div class="sub-card">
+      <div class="sub-header">
+        <div class="sub-title-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <h2>Oferta de assinatura</h2>
+        </div>
+        <div class="sub-quote">
+          <div class="sub-quote-avatar">
+            <img src="images/perfil.jpg" alt="mayckaodesafio">
+          </div>
+          <p>Aqui eu mostro tudo sem filtro. Vem espiar 👀</p>
+        </div>
+      </div>
+
+      <div class="sub-body">
+        <p class="sub-save-text">Oferta especial</p>
+
+        <a href="https://go.perfectpay.com.br/PPU38CQ7RAL" class="btn-cta" target="_blank" rel="noopener noreferrer">
+          Assinar agora R$ 37,90
+        </a>
+
+        <p class="sub-original-price">
+          Preço original <span>R$ 59,90</span>
+        </p>
+
+        <button class="btn-login" onclick="openLoginModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Já sou assinante
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENT TABS -->
+    <div class="content-card">
+      <div class="tabs-header">
+        <button class="tab-btn active" id="tabPosts" onclick="switchTab('posts')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>198 Postagens</span>
+        </button>
+        <button class="tab-btn" id="tabMedia" onclick="switchTab('media')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>184 Mídias</span>
+        </button>
+      </div>
+
+      <!-- TAB POSTS -->
+      <div class="tab-content" id="contentPosts">
+        <div class="posts-grid">
+          <div class="blurred-post post-item">
+            <img src="images/foto1.jpg" alt="Post 1">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Assine para desbloquear</span>
+            </div>
+          </div>
+          <div class="blurred-post post-item">
+            <img src="images/foto2.jpg" alt="Post 2">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Assine para desbloquear</span>
+            </div>
+          </div>
+          <div class="blurred-post post-item">
+            <img src="images/foto3.jpg" alt="Post 3">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Assine para desbloquear</span>
+            </div>
+          </div>
+          <div class="blurred-post post-item">
+            <img src="images/IMG_4832.JPG" alt="Post 4">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Assine para desbloquear</span>
+            </div>
+          </div>
+          <div class="blurred-post post-item">
+            <img src="images/IMG_9698.JPG" alt="Post 5">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Assine para desbloquear</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB MEDIA -->
+      <div class="tab-content hidden" id="contentMedia">
+        <div class="media-grid">
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto1.jpg" alt="Mídia 1">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto2.jpg" alt="Mídia 2">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto3.jpg" alt="Mídia 3">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/IMG_4832.JPG" alt="Mídia 4">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/IMG_9698.JPG" alt="Mídia 5">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto3.jpg" alt="Mídia 6">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto1.jpg" alt="Mídia 7">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto2.jpg" alt="Mídia 8">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="media-item blurred-post media-thumb">
+            <img src="images/foto3.jpg" alt="Mídia 9">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== MODAL DE LOGIN ========== -->
+<div class="login-overlay" id="loginOverlay" onclick="handleOverlayClick(event)">
+  <div class="login-card-wrap">
+    <button class="login-close" onclick="closeLoginModal()">&times;</button>
+    <div class="login-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:2.5rem;height:2.5rem;color:var(--accent);margin-bottom:0.75rem"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <h2>Acesso ao conteúdo</h2>
+      <p>Digite o email que você usou na compra</p>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="email" class="login-input" id="loginEmail" placeholder="seu@email.com" required autocomplete="email">
+        <button type="submit" class="btn-login-submit" id="loginBtn">
+          Acessar conteúdo
+        </button>
+      </form>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+var bioExpanded = false;
+var bioFull = 'Tudo que eu não posto em nenhum outro lugar tá aqui. Fotos, vídeos e bastidores todos os dias. Só pra quem assina 🔒';
+var bioShort = 'Tudo que eu não posto em nenhum outro lugar tá aqui. Vem espiar...';
+
+function toggleBio() {
+  bioExpanded = !bioExpanded;
+  document.getElementById('bioText').textContent = bioExpanded ? bioFull : bioShort;
+  document.getElementById('btnReadmore').textContent = bioExpanded ? 'Ver menos' : 'Ler mais';
+}
+
+function togglePlans() {
+  var list = document.getElementById('plansList');
+  var btn = document.getElementById('plansToggleBtn');
+  var isHidden = list.classList.contains('hidden');
+  list.classList.toggle('hidden');
+  btn.classList.toggle('open', isHidden);
+}
+
+function switchTab(tab) {
+  var tabPosts = document.getElementById('tabPosts');
+  var tabMedia = document.getElementById('tabMedia');
+  var contentPosts = document.getElementById('contentPosts');
+  var contentMedia = document.getElementById('contentMedia');
+
+  if (tab === 'posts') {
+    tabPosts.classList.add('active');
+    tabMedia.classList.remove('active');
+    contentPosts.classList.remove('hidden');
+    contentMedia.classList.add('hidden');
+  } else {
+    tabMedia.classList.add('active');
+    tabPosts.classList.remove('active');
+    contentMedia.classList.remove('hidden');
+    contentPosts.classList.add('hidden');
+  }
+}
+
+function openLoginModal() {
+  document.getElementById('loginOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('loginEmail').focus();
+  document.getElementById('loginError').textContent = '';
+}
+
+function closeLoginModal() {
+  document.getElementById('loginOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('loginOverlay')) {
+    closeLoginModal();
+  }
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  var btn = document.getElementById('loginBtn');
+  var errorEl = document.getElementById('loginError');
+  var email = document.getElementById('loginEmail').value.trim();
+
+  if (!email) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="login-spinner"></span> Verificando...';
+  errorEl.textContent = '';
+
+  try {
+    var res = await fetch('/api/verificar-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email }),
+    });
+    var data = await res.json();
+
+    if (data.success) {
+      btn.innerHTML = 'Acesso liberado!';
+      window.location.href = '/obrigado';
+    } else {
+      errorEl.textContent = data.message || 'Email não encontrado.';
+      btn.disabled = false;
+      btn.innerHTML = 'Acessar conteúdo';
+    }
+  } catch (err) {
+    errorEl.textContent = 'Erro de conexão. Tente novamente.';
+    btn.disabled = false;
+    btn.innerHTML = 'Acessar conteúdo';
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLoginModal();
+});
+
+if (window.location.search.indexOf('login=1') !== -1) {
+  openLoginModal();
+}
+</script>
+
+
+</body>
+</html>

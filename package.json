@@ -1,0 +1,9 @@
+{
+  "name": "privadao",
+  "version": "1.0.0",
+  "description": "Privadao - Conteudo exclusivo com verificacao de compra",
+  "private": true,
+  "dependencies": {
+    "jose": "^6.0.8"
+  }
+}
