@@ -16,11 +16,15 @@ async function getCaktoToken() {
     return caktoToken;
   }
 
-  console.log('Cakto: obtendo token...', {
-    hasClientId: !!CAKTO_CLIENT_ID,
-    hasClientSecret: !!CAKTO_CLIENT_SECRET,
-    clientIdLength: CAKTO_CLIENT_ID?.length,
-  });
+  if (!CAKTO_CLIENT_ID || !CAKTO_CLIENT_SECRET) {
+    console.error('Cakto: VARIAVEIS DE AMBIENTE AUSENTES', {
+      CAKTO_CLIENT_ID: CAKTO_CLIENT_ID ? `${CAKTO_CLIENT_ID.substring(0, 8)}...` : 'VAZIO',
+      CAKTO_CLIENT_SECRET: CAKTO_CLIENT_SECRET ? 'definido' : 'VAZIO',
+    });
+    return null;
+  }
+
+  console.error('Cakto: obtendo token...');
 
   const params = new URLSearchParams();
   params.append('client_id', CAKTO_CLIENT_ID);
@@ -41,7 +45,7 @@ async function getCaktoToken() {
   const data = await res.json();
   caktoToken = data.access_token;
   caktoTokenExpiry = Date.now() + (data.expires_in ? data.expires_in * 1000 - 60000 : 3600000);
-  console.log('Cakto: token obtido com sucesso');
+  console.error('Cakto: token obtido com sucesso');
   return caktoToken;
 }
 
@@ -58,7 +62,7 @@ async function checkCakto(email) {
     url.searchParams.set('status', 'paid');
     url.searchParams.set('limit', '1');
 
-    console.log('Cakto: buscando orders para', email, url.toString());
+    console.error('Cakto: buscando orders para', email);
 
     const res = await fetch(url.toString(), {
       headers: {
@@ -74,7 +78,7 @@ async function checkCakto(email) {
     }
 
     const data = await res.json();
-    console.log('Cakto: count=', data.count, 'results=', data.results?.length);
+    console.error('Cakto: count=', data.count, 'results=', data.results?.length);
     return data.count > 0 || (data.results && data.results.length > 0);
   } catch (err) {
     console.error('Erro Cakto:', err.message, err.stack);
