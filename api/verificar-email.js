@@ -162,10 +162,22 @@ export default async function handler(req, res) {
   }
 
   try {
+    const debugInfo = {
+      envVars: {
+        JWT_SECRET: !!process.env.JWT_SECRET,
+        PERFECTPAY_TOKEN: !!process.env.PERFECTPAY_TOKEN,
+        CAKTO_CLIENT_ID: !!process.env.CAKTO_CLIENT_ID,
+        CAKTO_CLIENT_SECRET: !!process.env.CAKTO_CLIENT_SECRET,
+      },
+    };
+
     const [cakto, perfectpay] = await Promise.all([
       checkCakto(cleanEmail),
       checkPerfectPay(cleanEmail),
     ]);
+
+    debugInfo.caktoResult = cakto;
+    debugInfo.perfectpayResult = perfectpay;
 
     const verified = cakto || perfectpay;
 
@@ -186,6 +198,7 @@ export default async function handler(req, res) {
     return res.status(403).json({
       success: false,
       message: 'Email nao encontrado. Verifique se usou o mesmo email da compra.',
+      debug: debugInfo,
     });
   } catch (err) {
     console.error('Erro na verificacao:', err);
