@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Privadao - Conteudo exclusivo com verificacao de compra",
   "private": true,
+  "type": "module",
   "dependencies": {
     "jose": "^6.0.8"
   }
