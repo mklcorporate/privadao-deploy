@@ -84,7 +84,12 @@ async function checkPerfectPay(email) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${PERFECTPAY_TOKEN}`,
         },
-        body: JSON.stringify({ sale_status: [2, 10], page }),
+        body: JSON.stringify({
+          sale_status: [2, 10],
+          page,
+          start_date_sale: '2020-01-01',
+          end_date_sale: '2030-12-31',
+        }),
       });
 
       if (!res.ok) {
