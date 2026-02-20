@@ -149,13 +149,11 @@ export default async function handler(req, res) {
     return res.status(403).json({
       success: false,
       message: 'Email nao encontrado. Verifique se usou o mesmo email da compra.',
-      _debug: { cakto: caktoResult, perfectpay: ppResult },
     });
-  } catch (err) {
+  } catch {
     return res.status(500).json({
       success: false,
       message: 'Erro interno. Tente novamente.',
-      _debug: { error: err.message },
     });
   }
 }
