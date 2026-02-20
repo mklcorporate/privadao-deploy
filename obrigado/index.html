@@ -29,10 +29,7 @@
       user-drag: none;
     }
 
-    video {
-      -webkit-user-drag: none;
-      user-drag: none;
-    }
+    /* Vídeos sem proteção extra para permitir reprodução normal */
 
     .gallery-item {
       position: relative;
@@ -44,6 +41,11 @@
       inset: 0;
       z-index: 2;
       background: transparent;
+    }
+
+    /* Vídeos: overlay não bloqueia cliques para os controles funcionarem */
+    .gallery-item-has-video::after {
+      pointer-events: none;
     }
 
     @media print {
@@ -696,8 +698,8 @@
   </div>
 
   <div class="gallery">
-    <div class="gallery-item">
-      <video controls playsinline preload="metadata" controlsList="nodownload nofullscreen" disablePictureInPicture oncontextmenu="return false">
+    <div class="gallery-item gallery-item-has-video">
+      <video controls playsinline preload="metadata">
         <source src="/images/IMG_2428.MOV" type="video/quicktime">
         <source src="/images/IMG_2428.MOV" type="video/mp4">
         Seu navegador não suporta este vídeo.
@@ -708,8 +710,8 @@
         </div>
       </div>
     </div>
-    <div class="gallery-item">
-      <video controls playsinline preload="metadata" controlsList="nodownload nofullscreen" disablePictureInPicture oncontextmenu="return false">
+    <div class="gallery-item gallery-item-has-video">
+      <video controls playsinline preload="metadata">
         <source src="/images/IMG_9272.MOV" type="video/quicktime">
         <source src="/images/IMG_9272.MOV" type="video/mp4">
         Seu navegador não suporta este vídeo.
@@ -776,8 +778,11 @@
     if (e.target === lb || e.target === lbClose || lbClose.contains(e.target)) closeLightbox();
   });
 
-  // Bloquear clique direito em toda a página
-  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  // Bloquear clique direito (exceto em vídeos para controles)
+  document.addEventListener('contextmenu', function(e) {
+    if (e.target.closest('video')) return;
+    e.preventDefault();
+  });
 
   // Bloquear atalhos: Ctrl+S, Ctrl+P, Ctrl+U, Ctrl+Shift+I, F12, PrintScreen
   document.addEventListener('keydown', function(e) {
@@ -805,15 +810,15 @@
     if (e.key === 'F12') { e.preventDefault(); return false; }
   });
 
-  // Bloquear arrastar imagens
+  // Bloquear arrastar imagens (vídeos liberados)
   document.addEventListener('dragstart', function(e) {
-    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+    if (e.target.tagName === 'IMG') e.preventDefault();
   });
 
-  // Mobile: bloquear long press (salvar imagem)
+  // Mobile: bloquear long press em imagens (vídeos liberados para controles)
   var touchTimer;
   document.addEventListener('touchstart', function(e) {
-    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+    if (e.target.tagName === 'IMG') {
       touchTimer = setTimeout(function() { e.preventDefault(); }, 500);
     }
   }, { passive: false });
@@ -821,13 +826,13 @@
   document.addEventListener('touchend', function() { clearTimeout(touchTimer); });
   document.addEventListener('touchmove', function() { clearTimeout(touchTimer); });
 
-  // Blur ao perder foco (screenshot por app externo)
+  // Blur em imagens ao perder foco (vídeos ficam sem blur para não atrapalhar)
   document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
-      document.querySelectorAll('img, video').forEach(function(el) { el.style.filter = 'blur(20px)'; });
+      document.querySelectorAll('img').forEach(function(el) { el.style.filter = 'blur(20px)'; });
     } else {
       setTimeout(function() {
-        document.querySelectorAll('img, video').forEach(function(el) { el.style.filter = ''; });
+        document.querySelectorAll('img').forEach(function(el) { el.style.filter = ''; });
       }, 300);
     }
   });
