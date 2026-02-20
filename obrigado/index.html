@@ -9,45 +9,45 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f0f5fa;
-      --card: #ffffff;
-      --foreground: #1e293b;
-      --muted: #64748b;
-      --border: #d6e3f0;
-      --accent: #3b82f6;
-      --accent-light: #93c5fd;
-      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #7dd3fc 100%);
-      --shadow-card: 0 2px 16px rgba(59, 130, 246, 0.08);
+      --bg: #0a0a0f;
+      --card: #16161e;
+      --card-hover: #1e1e2a;
+      --foreground: #f1f1f5;
+      --muted: #8b8b9e;
+      --border: #2a2a3a;
+      --accent: #e44190;
+      --accent-light: #f472b6;
+      --accent-gradient: linear-gradient(135deg, #e44190, #a855f7);
+      --gold: #fbbf24;
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
       --radius: 1rem;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--foreground);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
 
+    /* TOP BAR */
     .top-bar {
-      background: var(--card);
+      background: rgba(16,16,24,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       padding: 0.75rem 1rem;
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: 0 1px 8px rgba(59, 130, 246, 0.06);
     }
 
     .top-bar-inner {
-      max-width: 52rem;
+      max-width: 56rem;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -65,27 +65,16 @@
       height: 2.5rem;
       border-radius: 50%;
       overflow: hidden;
-      border: 2px solid var(--accent-light);
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
     }
 
-    .top-bar-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .top-bar-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-    .top-bar-name {
-      font-weight: 700;
-      font-size: 0.9375rem;
-      color: var(--foreground);
-    }
+    .top-bar-name { font-weight: 700; font-size: 0.9375rem; color: var(--foreground); }
+    .top-bar-label { font-size: 0.75rem; color: var(--muted); }
 
-    .top-bar-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .badge-member {
+    .badge-vip {
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
@@ -97,150 +86,247 @@
       font-weight: 600;
     }
 
-    .badge-member svg {
-      width: 0.875rem;
-      height: 0.875rem;
+    .badge-vip svg { width: 0.875rem; height: 0.875rem; }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
     }
 
+    .btn-logout:hover { background: rgba(255,255,255,0.12); color: var(--foreground); }
+    .btn-logout svg { width: 0.875rem; height: 0.875rem; }
+
     .container {
-      max-width: 52rem;
+      max-width: 56rem;
       margin: 0 auto;
       padding: 1.5rem 1rem 3rem;
     }
 
-    .welcome-banner {
-      background: var(--card);
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, rgba(228,65,144,0.15), rgba(168,85,247,0.1));
+      border: 1px solid rgba(228,65,144,0.2);
       border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      padding: 1.5rem;
+      padding: 2rem 1.5rem;
       margin-bottom: 1.5rem;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .welcome-banner h1 {
-      font-size: 1.375rem;
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(228,65,144,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-size: 1.5rem;
       font-weight: 800;
-      margin-bottom: 0.375rem;
+      margin-bottom: 0.5rem;
+      position: relative;
     }
 
-    .welcome-banner p {
+    .hero h1 span { color: var(--accent-light); }
+
+    .hero > p {
       color: var(--muted);
       font-size: 0.9375rem;
+      line-height: 1.6;
+      max-width: 36rem;
+      margin: 0 auto;
+      position: relative;
     }
 
-    .section-title {
+    /* INFO CARDS */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .info-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .info-icon svg { width: 1.125rem; height: 1.125rem; }
+
+    .info-icon.pink { background: rgba(228,65,144,0.15); color: var(--accent-light); }
+    .info-icon.purple { background: rgba(168,85,247,0.15); color: #c084fc; }
+    .info-icon.gold { background: rgba(251,191,36,0.15); color: var(--gold); }
+    .info-icon.green { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+    .info-card h3 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.125rem; }
+    .info-card p { font-size: 0.8125rem; color: var(--muted); line-height: 1.4; }
+
+    /* SECTION TITLE */
+    .section-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .section-title svg {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: var(--accent);
+    .section-header svg { width: 1.25rem; height: 1.25rem; color: var(--accent); }
+    .section-header h2 { font-size: 1.125rem; font-weight: 700; }
+
+    .section-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      background: rgba(228,65,144,0.12);
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
     }
 
-    .section-title h2 {
-      font-size: 1.125rem;
-      font-weight: 700;
-    }
-
-    .section-title span {
-      font-size: 0.8125rem;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
+    /* GALLERY */
     .gallery {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
     }
 
     .gallery-item {
       background: var(--card);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
       overflow: hidden;
-      transition: transform 0.2s;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .gallery-item:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      border-color: rgba(228,65,144,0.3);
     }
 
     .gallery-item img {
       width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
       display: block;
       cursor: pointer;
     }
 
     .gallery-item video {
       width: 100%;
+      aspect-ratio: 9/16;
+      object-fit: cover;
       display: block;
       background: #000;
     }
 
     .item-footer {
-      padding: 0.75rem 1rem;
+      padding: 0.625rem 0.75rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .item-footer-left {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .item-type-badge {
+    .item-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 0.375rem;
-      font-size: 0.6875rem;
-      font-weight: 600;
+      gap: 0.2rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 0.3rem;
+      font-size: 0.625rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.05em;
     }
 
-    .item-type-badge.photo {
-      background: #dbeafe;
-      color: #2563eb;
+    .item-badge.photo { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .item-badge.video { background: rgba(228,65,144,0.15); color: var(--accent-light); }
+    .item-badge.new { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+    .item-badge svg { width: 0.625rem; height: 0.625rem; }
+
+    .item-badges { display: flex; gap: 0.3rem; align-items: center; }
+
+    /* NOTICE */
+    .notice-banner {
+      background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(228,65,144,0.08));
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      margin-bottom: 1.75rem;
+      text-align: center;
     }
 
-    .item-type-badge.video {
-      background: #fce7f3;
-      color: #db2777;
+    .notice-banner h3 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      margin-bottom: 0.375rem;
+      color: var(--gold);
     }
 
-    .item-type-badge svg {
-      width: 0.75rem;
-      height: 0.75rem;
-    }
-
-    .item-label {
-      font-size: 0.8125rem;
+    .notice-banner p {
       color: var(--muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
     }
 
-    .item-date {
-      font-size: 0.75rem;
-      color: var(--muted);
+    .notice-banner p:last-of-type { margin-bottom: 1.25rem; }
+
+    .btn-x {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.5rem;
+      border-radius: 9999px;
+      background: #fff;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: opacity 0.2s;
     }
 
-    /* Lightbox */
+    .btn-x:hover { opacity: 0.85; }
+    .btn-x svg { width: 1rem; height: 1rem; }
+
+    /* LIGHTBOX */
     .lightbox {
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: rgba(0, 0, 0, 0.92);
+      background: rgba(0,0,0,0.95);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -250,10 +336,7 @@
       transition: opacity 0.3s;
     }
 
-    .lightbox.active {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
 
     .lightbox img {
       max-width: 100%;
@@ -266,11 +349,11 @@
       position: absolute;
       top: 1rem;
       right: 1rem;
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 2.75rem;
+      height: 2.75rem;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.1);
       color: #fff;
       font-size: 1.25rem;
       cursor: pointer;
@@ -280,55 +363,7 @@
       transition: background 0.2s;
     }
 
-    .lightbox-close:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .notice-banner {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      border: 2px dashed var(--accent-light);
-    }
-
-    .notice-banner h3 {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin-bottom: 0.375rem;
-      color: var(--foreground);
-    }
-
-    .notice-banner p {
-      color: var(--muted);
-      font-size: 0.9375rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .btn-x {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.625rem 1.25rem;
-      border-radius: 9999px;
-      background: #000;
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .btn-x:hover {
-      opacity: 0.85;
-    }
-
-    .btn-x svg {
-      width: 1rem;
-      height: 1rem;
-    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
 
     .footer-note {
       text-align: center;
@@ -338,38 +373,23 @@
       border-top: 1px solid var(--border);
     }
 
-    .footer-note a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .footer-note a { color: var(--accent-light); text-decoration: none; font-weight: 600; }
+    .footer-note a:hover { text-decoration: underline; }
 
-    .footer-note a:hover {
-      text-decoration: underline;
+    @media (min-width: 480px) {
+      .info-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (min-width: 640px) {
-      .gallery {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .welcome-banner h1 {
-        font-size: 1.625rem;
-      }
+      .gallery { grid-template-columns: repeat(3, 1fr); }
+      .hero h1 { font-size: 1.75rem; }
     }
 
     @media (min-width: 1024px) {
-      .container {
-        padding: 2rem 1rem 4rem;
-      }
-
-      .welcome-banner {
-        padding: 2rem;
-      }
-
-      .welcome-banner h1 {
-        font-size: 1.75rem;
-      }
+      .container { padding: 2rem 1rem 4rem; }
+      .hero { padding: 2.5rem 2rem; }
+      .hero h1 { font-size: 2rem; }
+      .info-grid { grid-template-columns: repeat(4, 1fr); }
     }
   </style>
 </head>
@@ -384,16 +404,16 @@
       </div>
       <div>
         <div class="top-bar-name">mayckaodesafio</div>
-        <div class="top-bar-label">Conteúdo exclusivo</div>
+        <div class="top-bar-label">Conteúdo Exclusivo</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:0.625rem;">
-      <div class="badge-member">
+      <div class="badge-vip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        Membro VIP
+        VIP
       </div>
-      <a href="/api/logout" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:9999px;background:#f1f5f9;color:#64748b;font-size:0.75rem;font-weight:600;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.875rem;height:0.875rem"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <a href="/api/logout" class="btn-logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sair
       </a>
     </div>
@@ -403,220 +423,217 @@
 <!-- CONTEÚDO -->
 <div class="container">
 
-  <!-- WELCOME -->
-  <div class="welcome-banner">
-    <h1>Bem-vindo ao conteúdo exclusivo</h1>
-    <p>Aqui você encontra tudo que não pode em outro lugar. Aproveite!</p>
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Bem-vindo ao <span>Privadão</span></h1>
+    <p>Seu acesso exclusivo ao meu conteúdo mais ousado. Aqui você encontra tudo que não pode em nenhum outro lugar. Aproveite cada detalhe!</p>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-icon pink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <h3>Como acessar</h3>
+        <p>Basta digitar o e-mail que você usou na compra e o acesso é liberado na hora.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <h3>Acesso Vitalício</h3>
+        <p>Sem mensalidade. Pagou uma vez, acessa para sempre com todas as atualizações.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div>
+        <h3>Atualização Diária</h3>
+        <p>Todos os dias posto fotos e vídeos novos. Sempre tem conteúdo fresquinho esperando.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div>
+        <h3>Conteúdo Picante</h3>
+        <p>Em breve conteúdos ainda mais ousados e sexy. Aguardem, todo mundo vai ver!</p>
+      </div>
+    </div>
   </div>
 
   <!-- FOTOS -->
-  <div class="section-title">
+  <div class="section-header">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
     <h2>Fotos</h2>
-    <span>19 itens</span>
+    <span class="section-count">21 fotos</span>
   </div>
 
   <div class="gallery">
     <div class="gallery-item">
-      <img src="/images/foto1.jpg" alt="Foto exclusiva 1" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_3323.jpeg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
+        <div class="item-badges">
+          <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
+          <span class="item-badge new">Novo</span>
         </div>
-        <span class="item-date">Recente</span>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/foto2.jpg" alt="Foto exclusiva 2" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_7758.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
+        <div class="item-badges">
+          <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
+          <span class="item-badge new">Novo</span>
         </div>
-        <span class="item-date">Recente</span>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/foto3.jpg" alt="Foto exclusiva 3" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_0887.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
+        <div class="item-badges">
+          <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
+          <span class="item-badge new">Novo</span>
         </div>
-        <span class="item-date">Recente</span>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/3A709A0F-73BF-4A39-8805-D6FEB0E272B7.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/foto1.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/63550FCE-8044-4308-B1D6-EB40B1BB949C.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/foto2.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/C7D5A75E-6A18-4CD8-AF6C-C234BD84B207.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/foto3.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/FullSizeRender.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_4350.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4350.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_4832.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4832.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_4914.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4914.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_4918.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4918.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_4924.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4924.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/FullSizeRender.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_8492.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/3A709A0F-73BF-4A39-8805-D6FEB0E272B7.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_8842.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/63550FCE-8044-4308-B1D6-EB40B1BB949C.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9316.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/C7D5A75E-6A18-4CD8-AF6C-C234BD84B207.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9643.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_8492.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9697.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_8842.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9698.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_9316.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Exclusivo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_0887.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)">
+      <img src="/images/IMG_9643.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge photo">Foto</span>
-          <span class="item-label">Novo</span>
-        </div>
-        <span class="item-date">Recente</span>
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="/images/IMG_9697.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <div class="item-footer">
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <img src="/images/IMG_9698.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <div class="item-footer">
+        <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
   </div>
 
   <!-- VÍDEOS -->
-  <div class="section-title">
+  <div class="section-header">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
     <h2>Vídeos</h2>
-    <span>2 itens</span>
+    <span class="section-count">3 vídeos</span>
   </div>
 
   <div class="gallery">
+    <div class="gallery-item">
+      <video controls playsinline preload="metadata">
+        <source src="/images/afe68cac-04ba-4f83-97dd-6f3689bac17c.MP4" type="video/mp4">
+        Seu navegador não suporta este vídeo.
+      </video>
+      <div class="item-footer">
+        <div class="item-badges">
+          <span class="item-badge video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Vídeo</span>
+          <span class="item-badge new">Novo</span>
+        </div>
+      </div>
+    </div>
     <div class="gallery-item">
       <video controls playsinline preload="metadata">
         <source src="/images/IMG_2428.MOV" type="video/quicktime">
@@ -624,17 +641,11 @@
         Seu navegador não suporta este vídeo.
       </video>
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge video">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Vídeo
-          </span>
-          <span class="item-label">Exclusivo</span>
+        <div class="item-badges">
+          <span class="item-badge video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Vídeo</span>
         </div>
-        <span class="item-date">Recente</span>
       </div>
     </div>
-
     <div class="gallery-item">
       <video controls playsinline preload="metadata">
         <source src="/images/IMG_9272.MOV" type="video/quicktime">
@@ -642,22 +653,17 @@
         Seu navegador não suporta este vídeo.
       </video>
       <div class="item-footer">
-        <div class="item-footer-left">
-          <span class="item-type-badge video">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Vídeo
-          </span>
-          <span class="item-label">Exclusivo</span>
+        <div class="item-badges">
+          <span class="item-badge video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Vídeo</span>
         </div>
-        <span class="item-date">Recente</span>
       </div>
     </div>
   </div>
 
   <!-- AVISO -->
   <div class="notice-banner">
-    <h3>Conteúdo novo todos os dias!</h3>
-    <p>Fique ligado, fotos e vídeos novos são postados diariamente. Me siga no X para não perder nada.</p>
+    <h3>Aguardem... vem muito mais!</h3>
+    <p>Conteúdos cada vez mais picantes e sensuais estão chegando. Fique de olho porque todo dia tem novidade. Me siga no X para não perder nada!</p>
     <a href="https://x.com/m_kr1k?s=21" class="btn-x" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       Seguir no X
@@ -668,7 +674,7 @@
 
 <!-- FOOTER -->
 <div class="footer-note">
-  Conteúdo exclusivo para assinantes &bull; <a href="/">Voltar</a>
+  Conteúdo exclusivo para membros &bull; Acesso vitalício sem mensalidade &bull; <a href="/">Voltar</a>
 </div>
 
 <!-- LIGHTBOX -->
