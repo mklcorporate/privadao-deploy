@@ -1,13 +1,17 @@
 import { SignJWT } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode((process.env.JWT_SECRET || '').trim());
+function cleanEnv(key) {
+  return (process.env[key] || '').trim().replace(/[^\x20-\x7E]/g, '');
+}
+
+const JWT_SECRET = new TextEncoder().encode(cleanEnv('JWT_SECRET'));
 
 // ---------------------------------------------------------------------------
 // Cakto: OAuth2 token + consulta de pedidos por email
 // ---------------------------------------------------------------------------
 async function getCaktoToken() {
-  const clientId = (process.env.CAKTO_CLIENT_ID || '').trim();
-  const clientSecret = (process.env.CAKTO_CLIENT_SECRET || '').trim();
+  const clientId = cleanEnv('CAKTO_CLIENT_ID');
+  const clientSecret = cleanEnv('CAKTO_CLIENT_SECRET');
   if (!clientId || !clientSecret) return { token: null, error: 'vars_vazias' };
 
   try {
@@ -56,7 +60,7 @@ async function checkCakto(email) {
 // PerfectPay: consulta de vendas aprovadas
 // ---------------------------------------------------------------------------
 async function checkPerfectPay(email) {
-  const ppToken = (process.env.PERFECTPAY_TOKEN || '').trim();
+  const ppToken = cleanEnv('PERFECTPAY_TOKEN');
   if (!ppToken) return { found: false, error: 'token_vazio' };
 
   const targetEmail = email.toLowerCase();
