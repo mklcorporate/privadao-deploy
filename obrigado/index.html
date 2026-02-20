@@ -11,6 +11,53 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* PROTEÇÃO ANTI-DOWNLOAD */
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+
+    video {
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
+    .gallery-item {
+      position: relative;
+    }
+
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: transparent;
+    }
+
+    @media print {
+      body * { display: none !important; }
+      body::after {
+        content: 'Conteúdo protegido - Impressão não permitida';
+        display: block;
+        text-align: center;
+        font-size: 2rem;
+        padding: 4rem;
+        color: #333;
+      }
+    }
+
     :root {
       --bg: #0a0c10;
       --card: #131720;
@@ -478,7 +525,7 @@
 
   <div class="gallery">
     <div class="gallery-item">
-      <img src="/images/IMG_1030.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_1030.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -487,7 +534,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_1033.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_1033.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -496,7 +543,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_1038.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_1038.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -505,7 +552,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_1039.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_1039.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -514,7 +561,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_3323.jpeg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_3323.jpeg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -523,7 +570,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_0887.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_0887.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges">
           <span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span>
@@ -532,109 +579,109 @@
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/foto1.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/foto1.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/foto2.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/foto2.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/foto3.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/foto3.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4350.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_4350.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4832.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_4832.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4914.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_4914.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4918.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_4918.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_4924.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_4924.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/FullSizeRender.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/FullSizeRender.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/3A709A0F-73BF-4A39-8805-D6FEB0E272B7.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/3A709A0F-73BF-4A39-8805-D6FEB0E272B7.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/63550FCE-8044-4308-B1D6-EB40B1BB949C.jpg" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/63550FCE-8044-4308-B1D6-EB40B1BB949C.jpg" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/C7D5A75E-6A18-4CD8-AF6C-C234BD84B207.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/C7D5A75E-6A18-4CD8-AF6C-C234BD84B207.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_8492.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_8492.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_8842.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_8842.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9316.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_9316.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9643.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_9643.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9697.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_9697.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
     </div>
     <div class="gallery-item">
-      <img src="/images/IMG_9698.JPG" alt="Foto exclusiva" onclick="openLightbox(this.src)" loading="lazy">
+      <img src="/images/IMG_9698.JPG" alt="Foto exclusiva" data-protected="1" loading="lazy">
       <div class="item-footer">
         <div class="item-badges"><span class="item-badge photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Foto</span></div>
       </div>
@@ -650,7 +697,7 @@
 
   <div class="gallery">
     <div class="gallery-item">
-      <video controls playsinline preload="metadata">
+      <video controls playsinline preload="metadata" controlsList="nodownload nofullscreen" disablePictureInPicture oncontextmenu="return false">
         <source src="/images/IMG_2428.MOV" type="video/quicktime">
         <source src="/images/IMG_2428.MOV" type="video/mp4">
         Seu navegador não suporta este vídeo.
@@ -662,7 +709,7 @@
       </div>
     </div>
     <div class="gallery-item">
-      <video controls playsinline preload="metadata">
+      <video controls playsinline preload="metadata" controlsList="nodownload nofullscreen" disablePictureInPicture oncontextmenu="return false">
         <source src="/images/IMG_9272.MOV" type="video/quicktime">
         <source src="/images/IMG_9272.MOV" type="video/mp4">
         Seu navegador não suporta este vídeo.
@@ -693,28 +740,98 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <img id="lightboxImg" src="" alt="Visualização">
+  <img id="lightboxImg" src="" alt="Visualização" draggable="false" oncontextmenu="return false">
 </div>
 
 <script>
-function openLightbox(src) {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightboxImg');
+  var lbClose = document.getElementById('lightboxClose');
 
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('active');
-  document.body.style.overflow = '';
-}
+  // Lightbox: abrir via clique no gallery-item (overlay intercepta)
+  document.querySelectorAll('.gallery-item').forEach(function(item) {
+    var img = item.querySelector('img[data-protected]');
+    if (!img) return;
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('.item-footer') || e.target.closest('video')) return;
+      lbImg.src = img.src;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLightbox();
-});
+  function closeLightbox() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  lb.addEventListener('click', function(e) {
+    if (e.target === lb || e.target === lbClose || lbClose.contains(e.target)) closeLightbox();
+  });
+
+  // Bloquear clique direito em toda a página
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+  // Bloquear atalhos: Ctrl+S, Ctrl+P, Ctrl+U, Ctrl+Shift+I, F12, PrintScreen
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeLightbox(); return; }
+
+    if (e.key === 'PrintScreen' || e.key === 'Snapshot') {
+      e.preventDefault();
+      document.body.style.filter = 'blur(30px)';
+      setTimeout(function() { document.body.style.filter = ''; }, 1500);
+      return;
+    }
+
+    if (e.ctrlKey || e.metaKey) {
+      var blocked = ['s','p','u','i','j','c'];
+      if (blocked.indexOf(e.key.toLowerCase()) !== -1) {
+        e.preventDefault();
+        return false;
+      }
+      if (e.shiftKey && ['i','j','c'].indexOf(e.key.toLowerCase()) !== -1) {
+        e.preventDefault();
+        return false;
+      }
+    }
+
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+  });
+
+  // Bloquear arrastar imagens
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') e.preventDefault();
+  });
+
+  // Mobile: bloquear long press (salvar imagem)
+  var touchTimer;
+  document.addEventListener('touchstart', function(e) {
+    if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+      touchTimer = setTimeout(function() { e.preventDefault(); }, 500);
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function() { clearTimeout(touchTimer); });
+  document.addEventListener('touchmove', function() { clearTimeout(touchTimer); });
+
+  // Blur ao perder foco (screenshot por app externo)
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      document.querySelectorAll('img, video').forEach(function(el) { el.style.filter = 'blur(20px)'; });
+    } else {
+      setTimeout(function() {
+        document.querySelectorAll('img, video').forEach(function(el) { el.style.filter = ''; });
+      }, 300);
+    }
+  });
+})();
 </script>
 
 </body>
