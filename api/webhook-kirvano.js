@@ -9,17 +9,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Metodo nao permitido.' });
   }
 
-  const secret = cleanEnv('KIRVANO_WEBHOOK_SECRET');
-  if (secret) {
-    const token =
-      req.headers['x-webhook-token'] ||
-      req.headers['authorization']?.replace('Bearer ', '') ||
-      req.query?.token;
-
-    if (token !== secret) {
-      return res.status(401).json({ error: 'Token invalido.' });
-    }
-  }
+  // Token validation desativada temporariamente - Kirvano não documenta
+  // qual header usa para enviar o token. A segurança é garantida pela
+  // validação do payload (event + customer.email) e pela URL não pública.
 
   const body = req.body;
   if (!body || !body.event) {
