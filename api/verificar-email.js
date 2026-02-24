@@ -1,4 +1,5 @@
 import { SignJWT } from 'jose';
+import { neon } from '@neondatabase/serverless';
 
 function cleanEnv(key) {
   return (process.env[key] || '').trim().replace(/[^\x20-\x7E]/g, '');
@@ -108,6 +109,22 @@ async function checkPerfectPay(email) {
 }
 
 // ---------------------------------------------------------------------------
+// Kirvano: consulta de compradores no banco Neon (via webhook)
+// ---------------------------------------------------------------------------
+async function checkKirvano(email) {
+  const databaseUrl = cleanEnv('DATABASE_URL');
+  if (!databaseUrl) return { found: false, error: 'DATABASE_URL vazia' };
+
+  try {
+    const sql = neon(databaseUrl);
+    const rows = await sql`SELECT 1 FROM compradores WHERE email = ${email} LIMIT 1`;
+    return { found: rows.length > 0 };
+  } catch (err) {
+    return { found: false, error: 'db_error', message: err.message };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------------
 export default async function handler(req, res) {
@@ -126,12 +143,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [caktoResult, ppResult] = await Promise.all([
+    const [caktoResult, ppResult, kirvanoResult] = await Promise.all([
       checkCakto(cleanEmail),
       checkPerfectPay(cleanEmail),
+      checkKirvano(cleanEmail),
     ]);
 
-    const verified = caktoResult.found || ppResult.found;
+    const verified = caktoResult.found || ppResult.found || kirvanoResult.found;
 
     if (verified) {
       const token = await new SignJWT({ email: cleanEmail })
