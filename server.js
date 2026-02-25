@@ -108,7 +108,7 @@ async function checkPerfectPay(email) {
           Authorization: `Bearer ${ppToken}`,
         },
         body: JSON.stringify({
-          sale_status: [2, 10],
+          sale_status: [1, 2, 3, 7, 8, 10],
           page,
           start_date_sale: '2020-01-01',
           end_date_sale: '2030-12-31',
@@ -191,7 +191,7 @@ app.post('/api/verificar-email', async (req, res) => {
         httpOnly: true,
         sameSite: 'Lax',
         maxAge: 86400 * 1000,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false,
         path: '/',
       });
 
@@ -234,7 +234,7 @@ app.get('/api/diagnostico', async (req, res) => {
       const ppRes = await fetch('https://app.perfectpay.com.br/api/v1/sales/get', {
         method: 'POST',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: `Bearer ${ppToken}` },
-        body: JSON.stringify({ sale_status: [2, 10], page: 1, start_date_sale: '2020-01-01', end_date_sale: '2030-12-31' }),
+        body: JSON.stringify({ sale_status: [1, 2, 3, 7, 8, 10], page: 1, start_date_sale: '2020-01-01', end_date_sale: '2030-12-31' }),
       });
       if (ppRes.ok) {
         const data = await ppRes.json();
@@ -270,6 +270,30 @@ app.get('/api/diagnostico', async (req, res) => {
   };
 
   return res.json(results);
+});
+
+// ---------------------------------------------------------------------------
+// Rota: POST /api/diagnostico-email (temporario)
+// ---------------------------------------------------------------------------
+app.post('/api/diagnostico-email', async (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Informe o email' });
+
+  const cleanEmail = email.trim().toLowerCase();
+
+  const [caktoResult, ppResult, dbResult] = await Promise.all([
+    checkCakto(cleanEmail).catch(e => ({ found: false, error: e.message })),
+    checkPerfectPay(cleanEmail).catch(e => ({ found: false, error: e.message })),
+    checkDatabase(cleanEmail).catch(e => ({ found: false, error: e.message })),
+  ]);
+
+  return res.json({
+    email: cleanEmail,
+    cakto: caktoResult,
+    perfectpay: ppResult,
+    database: dbResult,
+    resultado: caktoResult.found || ppResult.found || dbResult.found ? 'ACESSO LIBERADO' : 'NAO ENCONTRADO',
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -319,45 +343,61 @@ app.post('/api/webhook-kirvano', async (req, res) => {
 // ---------------------------------------------------------------------------
 app.post('/api/webhook-mangofy', async (req, res) => {
   const body = req.body;
-  if (!body || !body.payment_code || !body.payment_status) {
-    return res.status(400).json({ error: 'Payload invalido.' });
+  if (!body) {
+    return res.status(400).json({ error: 'Payload vazio.' });
   }
-
-  const { payment_code, payment_status } = body;
 
   const sql = getDb();
   if (!sql) {
     return res.status(500).json({ error: 'DATABASE_URL nao configurada.' });
   }
 
-  const apiKey = cleanEnv('MANGOFY_API_KEY');
-  const storeCode = cleanEnv('MANGOFY_STORE_CODE');
+  // Loga payload completo para debug
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS webhook_logs (
+        id SERIAL PRIMARY KEY,
+        plataforma VARCHAR(50) DEFAULT 'mangofy',
+        payload JSONB,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `;
+    await sql`INSERT INTO webhook_logs (plataforma, payload) VALUES ('mangofy', ${JSON.stringify(body)})`;
+  } catch {}
 
-  if (!apiKey || !storeCode) {
-    return res.status(500).json({ error: 'Credenciais MangoFy nao configuradas.' });
+  const paymentCode = body.payment_code || body.code || '';
+  const status = body.payment_status || body.status || '';
+
+  // Tenta extrair email direto do payload (campos possiveis)
+  let email = (
+    body.customer?.email ||
+    body.email ||
+    body.buyer?.email ||
+    body.client?.email ||
+    body.contact_email ||
+    body.customerEmail
+  )?.trim().toLowerCase() || null;
+
+  // Se nao achou email no payload, tenta via API
+  if (!email && paymentCode) {
+    const apiKey = cleanEnv('MANGOFY_API_KEY');
+    const storeCode = cleanEnv('MANGOFY_STORE_CODE');
+
+    if (apiKey && storeCode) {
+      try {
+        const payRes = await fetch(`https://checkout.mangofy.com.br/api/v1/payment/${paymentCode}`, {
+          headers: { Authorization: apiKey, 'Store-Code': storeCode, Accept: 'application/json' },
+        });
+        if (payRes.ok) {
+          const payData = await payRes.json();
+          email = (payData.customer?.email || payData.email)?.trim().toLowerCase() || null;
+        }
+      } catch {}
+    }
   }
 
   try {
-    if (payment_status === 'approved') {
-      const payRes = await fetch(`https://checkout.mangofy.com.br/api/v1/payment/${payment_code}`, {
-        headers: {
-          Authorization: apiKey,
-          'Store-Code': storeCode,
-          Accept: 'application/json',
-        },
-      });
-
-      if (!payRes.ok) {
-        return res.status(502).json({ error: 'Erro ao consultar MangoFy.', status: payRes.status });
-      }
-
-      const payData = await payRes.json();
-      const email = payData.customer?.email?.trim().toLowerCase();
-
-      if (!email) {
-        return res.json({ success: true, action: 'sem_email_no_pagamento', payment_code });
-      }
-
+    if (status === 'approved' && email) {
       await sql`
         INSERT INTO compradores (email, plataforma)
         VALUES (${email}, 'mangofy')
@@ -366,28 +406,18 @@ app.post('/api/webhook-mangofy', async (req, res) => {
       return res.json({ success: true, action: 'email_registrado', email });
     }
 
-    if (payment_status === 'refunded') {
-      const payRes = await fetch(`https://checkout.mangofy.com.br/api/v1/payment/${payment_code}`, {
-        headers: {
-          Authorization: apiKey,
-          'Store-Code': storeCode,
-          Accept: 'application/json',
-        },
-      });
-
-      if (payRes.ok) {
-        const payData = await payRes.json();
-        const email = payData.customer?.email?.trim().toLowerCase();
-        if (email) {
-          await sql`DELETE FROM compradores WHERE email = ${email}`;
-          return res.json({ success: true, action: 'acesso_removido', email });
-        }
-      }
-
-      return res.json({ success: true, action: 'refund_sem_email', payment_code });
+    if (status === 'refunded' && email) {
+      await sql`DELETE FROM compradores WHERE email = ${email}`;
+      return res.json({ success: true, action: 'acesso_removido', email });
     }
 
-    return res.json({ success: true, action: 'evento_ignorado', payment_status });
+    return res.json({
+      success: true,
+      action: email ? 'evento_processado' : 'sem_email_no_payload',
+      status,
+      payment_code: paymentCode,
+      email_found: !!email,
+    });
   } catch (err) {
     return res.status(500).json({ error: 'Erro ao processar webhook.', detail: err.message });
   }
