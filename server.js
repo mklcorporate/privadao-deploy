@@ -10,6 +10,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.set('trust proxy', 1);
+
 function cleanEnv(key) {
   return (process.env[key] || '').trim().replace(/[^\x20-\x7E]/g, '');
 }
@@ -187,11 +189,12 @@ app.post('/api/verificar-email', async (req, res) => {
         .setIssuedAt()
         .sign(JWT_SECRET);
 
+      const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
       res.cookie('privadao_session', token, {
         httpOnly: true,
         sameSite: 'Lax',
         maxAge: 86400 * 1000,
-        secure: false,
+        secure: isSecure,
         path: '/',
       });
 
