@@ -198,16 +198,78 @@ app.post('/api/verificar-email', async (req, res) => {
       return res.json({ success: true, message: 'Acesso liberado!' });
     }
 
+    console.log('[VERIFICAR]', cleanEmail, JSON.stringify({ cakto: caktoResult, pp: ppResult, db: dbResult }));
+
     return res.status(403).json({
       success: false,
       message: 'Email nao encontrado. Verifique se usou o mesmo email da compra.',
     });
-  } catch {
+  } catch (err) {
+    console.error('[VERIFICAR] Erro:', err);
     return res.status(500).json({
       success: false,
       message: 'Erro interno. Tente novamente.',
     });
   }
+});
+
+// ---------------------------------------------------------------------------
+// Rota: GET /api/diagnostico (temporario - remover em producao)
+// ---------------------------------------------------------------------------
+app.get('/api/diagnostico', async (req, res) => {
+  const results = {};
+
+  try {
+    const tokenRes = await getCaktoToken();
+    results.cakto = tokenRes.token ? 'OK - token obtido' : `ERRO - ${tokenRes.error}`;
+  } catch (e) {
+    results.cakto = `ERRO - ${e.message}`;
+  }
+
+  try {
+    const ppToken = cleanEnv('PERFECTPAY_TOKEN');
+    if (!ppToken) {
+      results.perfectpay = 'ERRO - token vazio';
+    } else {
+      const ppRes = await fetch('https://app.perfectpay.com.br/api/v1/sales/get', {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: `Bearer ${ppToken}` },
+        body: JSON.stringify({ sale_status: [2, 10], page: 1, start_date_sale: '2020-01-01', end_date_sale: '2030-12-31' }),
+      });
+      if (ppRes.ok) {
+        const data = await ppRes.json();
+        results.perfectpay = `OK - ${data.sales?.total || 0} vendas, ${data.sales?.total_pages || 0} paginas`;
+      } else {
+        results.perfectpay = `ERRO - HTTP ${ppRes.status}`;
+      }
+    }
+  } catch (e) {
+    results.perfectpay = `ERRO - ${e.message}`;
+  }
+
+  try {
+    const sql = getDb();
+    if (!sql) {
+      results.database = 'ERRO - DATABASE_URL vazia';
+    } else {
+      const rows = await sql`SELECT COUNT(*) as total FROM compradores`;
+      results.database = `OK - ${rows[0]?.total || 0} compradores`;
+    }
+  } catch (e) {
+    results.database = `ERRO - ${e.message}`;
+  }
+
+  results.env_check = {
+    JWT_SECRET: cleanEnv('JWT_SECRET') ? 'definido' : 'VAZIO',
+    PERFECTPAY_TOKEN: cleanEnv('PERFECTPAY_TOKEN') ? 'definido' : 'VAZIO',
+    CAKTO_CLIENT_ID: cleanEnv('CAKTO_CLIENT_ID') ? 'definido' : 'VAZIO',
+    CAKTO_CLIENT_SECRET: cleanEnv('CAKTO_CLIENT_SECRET') ? 'definido' : 'VAZIO',
+    DATABASE_URL: cleanEnv('DATABASE_URL') ? 'definido' : 'VAZIO',
+    MANGOFY_API_KEY: cleanEnv('MANGOFY_API_KEY') ? 'definido' : 'VAZIO',
+    MANGOFY_STORE_CODE: cleanEnv('MANGOFY_STORE_CODE') ? 'definido' : 'VAZIO',
+  };
+
+  return res.json(results);
 });
 
 // ---------------------------------------------------------------------------
