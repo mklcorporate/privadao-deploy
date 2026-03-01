@@ -1,9 +1,0 @@
-node_modules
-.env
-.env.local
-.git
-.gitignore
-.dockerignore
-.DS_Store
-*.log
-.vercel

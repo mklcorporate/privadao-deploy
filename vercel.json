@@ -1,9 +1,0 @@
-{
-  "framework": null,
-  "outputDirectory": ".",
-  "installCommand": "npm install",
-  "rewrites": [
-    { "source": "/obrigado", "destination": "/obrigado/index.html" },
-    { "source": "/obrigado/", "destination": "/obrigado/index.html" }
-  ]
-}
