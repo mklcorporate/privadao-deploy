@@ -301,23 +301,32 @@ app.post('/api/diagnostico-email', async (req, res) => {
 
 // ---------------------------------------------------------------------------
 // Rota: POST /api/webhook-kirvano
+// Responde 200 imediatamente e processa em background
 // ---------------------------------------------------------------------------
-app.post('/api/webhook-kirvano', async (req, res) => {
+app.post('/api/webhook-kirvano', (req, res) => {
   const body = req.body;
-  if (!body || !body.event) {
-    return res.status(400).json({ error: 'Payload invalido.' });
-  }
+  res.status(200).json({ received: true });
 
+  if (!body || !body.event) return;
+
+  processKirvano(body).catch(err => {
+    console.error('[kirvano-webhook] Erro no processamento async:', err.message);
+  });
+});
+
+async function processKirvano(body) {
   const event = body.event;
   const email = body.customer?.email?.trim().toLowerCase();
 
   if (!email) {
-    return res.status(400).json({ error: 'Email do cliente ausente.' });
+    console.log('[kirvano-webhook] Email ausente no payload. Evento:', event);
+    return;
   }
 
   const sql = getDb();
   if (!sql) {
-    return res.status(500).json({ error: 'DATABASE_URL nao configurada.' });
+    console.error('[kirvano-webhook] DATABASE_URL nao configurada.');
+    return;
   }
 
   try {
@@ -327,51 +336,51 @@ app.post('/api/webhook-kirvano', async (req, res) => {
         VALUES (${email}, 'kirvano')
         ON CONFLICT (email) DO NOTHING
       `;
-      return res.json({ success: true, action: 'email_registrado', email });
-    }
-
-    if (event === 'SALE_CHARGEBACK' || event === 'SALE_REFUNDED') {
+      console.log('[kirvano-webhook] Email registrado:', email);
+    } else if (event === 'SALE_CHARGEBACK' || event === 'SALE_REFUNDED') {
       await sql`DELETE FROM compradores WHERE email = ${email}`;
-      return res.json({ success: true, action: 'acesso_removido', email });
+      console.log('[kirvano-webhook] Acesso removido:', email);
+    } else {
+      console.log('[kirvano-webhook] Evento ignorado:', event, 'Email:', email);
     }
-
-    return res.json({ success: true, action: 'evento_ignorado', event });
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao processar webhook.', detail: err.message });
+    console.error('[kirvano-webhook] Erro DB:', err.message, 'Email:', email);
   }
-});
+}
 
 // ---------------------------------------------------------------------------
 // Rota: POST /api/webhook-mangofy
+// Responde 200 imediatamente e processa em background para evitar timeout
 // ---------------------------------------------------------------------------
-app.post('/api/webhook-mangofy', async (req, res) => {
+app.post('/api/webhook-mangofy', (req, res) => {
   const body = req.body;
   if (!body) {
-    return res.status(400).json({ error: 'Payload vazio.' });
+    return res.status(200).json({ received: true });
   }
 
+  res.status(200).json({ received: true });
+
+  processMangofy(body).catch(err => {
+    console.error('[mangofy-webhook] Erro no processamento async:', err.message);
+  });
+});
+
+async function processMangofy(body) {
   const sql = getDb();
   if (!sql) {
-    return res.status(500).json({ error: 'DATABASE_URL nao configurada.' });
+    console.error('[mangofy-webhook] DATABASE_URL nao configurada.');
+    return;
   }
 
-  // Loga payload completo para debug
   try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS webhook_logs (
-        id SERIAL PRIMARY KEY,
-        plataforma VARCHAR(50) DEFAULT 'mangofy',
-        payload JSONB,
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `;
     await sql`INSERT INTO webhook_logs (plataforma, payload) VALUES ('mangofy', ${JSON.stringify(body)})`;
-  } catch {}
+  } catch (err) {
+    console.error('[mangofy-webhook] Erro ao logar payload:', err.message);
+  }
 
   const paymentCode = body.payment_code || body.code || '';
   const status = body.payment_status || body.status || '';
 
-  // Tenta extrair email direto do payload (campos possiveis)
   let email = (
     body.customer?.email ||
     body.email ||
@@ -381,7 +390,6 @@ app.post('/api/webhook-mangofy', async (req, res) => {
     body.customerEmail
   )?.trim().toLowerCase() || null;
 
-  // Se nao achou email no payload, tenta via API
   if (!email && paymentCode) {
     const apiKey = cleanEnv('MANGOFY_API_KEY');
     const storeCode = cleanEnv('MANGOFY_STORE_CODE');
@@ -390,41 +398,41 @@ app.post('/api/webhook-mangofy', async (req, res) => {
       try {
         const payRes = await fetch(`https://checkout.mangofy.com.br/api/v1/payment/${paymentCode}`, {
           headers: { Authorization: apiKey, 'Store-Code': storeCode, Accept: 'application/json' },
+          signal: AbortSignal.timeout(8000),
         });
         if (payRes.ok) {
           const payData = await payRes.json();
           email = (payData.customer?.email || payData.email)?.trim().toLowerCase() || null;
         }
-      } catch {}
+      } catch (err) {
+        console.error('[mangofy-webhook] Erro ao buscar email via API:', err.message);
+      }
     }
   }
 
+  if (!email) {
+    console.log('[mangofy-webhook] Sem email no payload. Status:', status, 'Code:', paymentCode);
+    return;
+  }
+
   try {
-    if (status === 'approved' && email) {
+    if (status === 'approved') {
       await sql`
         INSERT INTO compradores (email, plataforma)
         VALUES (${email}, 'mangofy')
         ON CONFLICT (email) DO NOTHING
       `;
-      return res.json({ success: true, action: 'email_registrado', email });
-    }
-
-    if (status === 'refunded' && email) {
+      console.log('[mangofy-webhook] Email registrado:', email);
+    } else if (status === 'refunded') {
       await sql`DELETE FROM compradores WHERE email = ${email}`;
-      return res.json({ success: true, action: 'acesso_removido', email });
+      console.log('[mangofy-webhook] Acesso removido:', email);
+    } else {
+      console.log('[mangofy-webhook] Evento ignorado. Status:', status, 'Email:', email);
     }
-
-    return res.json({
-      success: true,
-      action: email ? 'evento_processado' : 'sem_email_no_payload',
-      status,
-      payment_code: paymentCode,
-      email_found: !!email,
-    });
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao processar webhook.', detail: err.message });
+    console.error('[mangofy-webhook] Erro DB:', err.message, 'Email:', email);
   }
-});
+}
 
 // ---------------------------------------------------------------------------
 // Rota: GET /api/logout
