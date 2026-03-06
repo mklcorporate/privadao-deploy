@@ -300,9 +300,18 @@ app.post('/api/diagnostico-email', async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
-// Rota: POST /api/webhook-kirvano
-// Responde 200 imediatamente e processa em background
+// Rota: /api/webhook-kirvano
+// GET/HEAD: health check
+// POST: recebe webhook e processa em background
 // ---------------------------------------------------------------------------
+app.get('/api/webhook-kirvano', (req, res) => {
+  res.status(200).json({ status: 'ok', endpoint: 'webhook-kirvano' });
+});
+
+app.head('/api/webhook-kirvano', (req, res) => {
+  res.status(200).end();
+});
+
 app.post('/api/webhook-kirvano', (req, res) => {
   const body = req.body;
   res.status(200).json({ received: true });
@@ -349,9 +358,18 @@ async function processKirvano(body) {
 }
 
 // ---------------------------------------------------------------------------
-// Rota: POST /api/webhook-mangofy
-// Responde 200 imediatamente e processa em background para evitar timeout
+// Rota: /api/webhook-mangofy
+// GET/HEAD: health check (Mangofy testa antes de ativar)
+// POST: recebe webhook e processa em background
 // ---------------------------------------------------------------------------
+app.get('/api/webhook-mangofy', (req, res) => {
+  res.status(200).json({ status: 'ok', endpoint: 'webhook-mangofy' });
+});
+
+app.head('/api/webhook-mangofy', (req, res) => {
+  res.status(200).end();
+});
+
 app.post('/api/webhook-mangofy', (req, res) => {
   const body = req.body;
   if (!body) {
