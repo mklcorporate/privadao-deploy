@@ -342,6 +342,48 @@
       text-align: center;
     }
 
+    .btn-telegram {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.875rem 1.75rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #0088cc 0%, #00b2ff 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 4px 14px rgba(0,136,204,0.35);
+    }
+
+    .btn-telegram:hover { opacity: 0.9; }
+    .btn-telegram:active { transform: scale(0.98); }
+    .btn-telegram svg { width: 1.25rem; height: 1.25rem; }
+
+    .telegram-banner {
+      background: linear-gradient(135deg, rgba(0,136,204,0.1), rgba(0,178,255,0.06));
+      border: 1px solid rgba(0,136,204,0.25);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      margin-bottom: 1.75rem;
+      text-align: center;
+    }
+
+    .telegram-banner h3 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      margin-bottom: 0.375rem;
+      color: #5bc8f5;
+    }
+
+    .telegram-banner p {
+      color: var(--muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
     .notice-banner h3 {
       font-size: 1.125rem;
       font-weight: 800;
@@ -481,6 +523,16 @@
   <div class="hero">
     <h1>Bem-vindo ao <span>Privadão</span></h1>
     <p>Sua área exclusiva com conteúdo seleto de lifestyle, treino, dieta e bastidores da minha rotina fitness. Obrigado por fazer parte dessa comunidade!</p>
+  </div>
+
+  <!-- TELEGRAM -->
+  <div class="telegram-banner">
+    <h3>Canal Exclusivo no Telegram</h3>
+    <p>Entre no nosso canal VIP do Telegram para receber conteúdo extra, novidades em primeira mão e interagir com a comunidade!</p>
+    <a href="https://t.me/+PkFKtaQaN8czYWQx" class="btn-telegram" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      Entrar no Canal VIP
+    </a>
   </div>
 
   <!-- INFO CARDS -->
