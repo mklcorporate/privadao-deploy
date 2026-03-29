@@ -545,6 +545,7 @@
       position: relative;
       border-radius: 0.75rem;
       overflow: hidden;
+      background: #1e293b;
     }
 
     .blurred-post img,
@@ -553,8 +554,16 @@
       height: 100%;
       object-fit: cover;
       filter: blur(14px) brightness(0.85);
-      transform: scale(1.1);
+      transform: scale(1.15);
       pointer-events: none;
+      will-change: transform;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .blurred-post img.loaded,
+    .blurred-post video.loaded {
+      opacity: 1;
     }
 
     .blurred-post .lock-badge {
@@ -1096,6 +1105,16 @@ document.addEventListener('keydown', function(e) {
 if (window.location.search.indexOf('login=1') !== -1) {
   openLoginModal();
 }
+
+document.querySelectorAll('.blurred-post img, .blurred-post video').forEach(function(el) {
+  if (el.complete || el.readyState >= 2) {
+    el.classList.add('loaded');
+  } else {
+    el.addEventListener('load', function() { el.classList.add('loaded'); });
+    el.addEventListener('loadeddata', function() { el.classList.add('loaded'); });
+    el.addEventListener('error', function() { el.classList.add('loaded'); });
+  }
+});
 </script>
 
 
