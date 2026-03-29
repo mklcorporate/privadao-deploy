@@ -136,97 +136,9 @@
       }
     }
 
-    /* ===== AGE GATE ===== */
-    .age-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 1.5rem;
-    }
-
-    .age-overlay.hidden { display: none; }
-
-    .age-card {
-      background: #fff;
-      max-width: 26rem;
-      width: 100%;
-      border-radius: 1.25rem;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-      animation: fadeUp 0.4s ease;
-    }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    .age-card h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--foreground);
-      margin-bottom: 0.5rem;
-    }
-
-    .age-card p {
-      color: var(--muted);
-      font-size: 0.875rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .age-options {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
-
-    .age-options label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      font-size: 0.9375rem;
-      color: var(--foreground);
-    }
-
-    .age-options input[type="radio"] {
-      accent-color: var(--accent);
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    .btn-age {
-      width: 100%;
-      padding: 0.875rem;
-      border: none;
-      border-radius: 9999px;
-      background: var(--accent-gradient);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .btn-age:hover:not(:disabled) { opacity: 0.95; }
-    .btn-age:active:not(:disabled) { transform: scale(0.98); }
-    .btn-age:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    /* ===== BLURRED BG FOR AGE GATE ===== */
-    .page-content.blurred {
-      filter: blur(12px);
-      pointer-events: none;
-      user-select: none;
     }
 
     /* ===== COVER + AVATAR ===== */
@@ -911,7 +823,7 @@
         <svg class="verified-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
       <p class="profile-handle">@mayckaodesafio</p>
-      <p class="profile-bio" id="bioText">Tudo que eu não posto em nenhum outro lugar tá aqui. Vem espiar...</p>
+      <p class="profile-bio" id="bioText">Minha rotina completa que eu não posto em nenhum outro lugar. Treino, dieta e lifestyle exclusivo.</p>
       <button class="btn-readmore" id="btnReadmore" onclick="toggleBio()">Ler mais</button>
     </div>
 
@@ -926,7 +838,7 @@
           <div class="sub-quote-avatar">
             <img src="images/perfil.jpg" alt="mayckaodesafio">
           </div>
-          <p>Aqui eu mostro tudo sem filtro. Vem espiar 👀</p>
+          <p>Aqui você vê a rotina real, sem edição. Tudo que eu não mostro nas redes 💪</p>
         </div>
       </div>
 
@@ -968,35 +880,35 @@
             <img src="images/foto1.jpg" alt="Post 1">
             <div class="lock-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Assine para desbloquear</span>
+              <span>Conteúdo exclusivo para membros</span>
             </div>
           </div>
           <div class="blurred-post post-item">
             <img src="images/foto2.jpg" alt="Post 2">
             <div class="lock-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Assine para desbloquear</span>
+              <span>Conteúdo exclusivo para membros</span>
             </div>
           </div>
           <div class="blurred-post post-item">
             <img src="images/foto3.jpg" alt="Post 3">
             <div class="lock-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Assine para desbloquear</span>
+              <span>Conteúdo exclusivo para membros</span>
             </div>
           </div>
           <div class="blurred-post post-item">
             <img src="images/IMG_4832.JPG" alt="Post 4">
             <div class="lock-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Assine para desbloquear</span>
+              <span>Conteúdo exclusivo para membros</span>
             </div>
           </div>
           <div class="blurred-post post-item">
             <img src="images/IMG_9316.JPG" alt="Post 5">
             <div class="lock-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Assine para desbloquear</span>
+              <span>Conteúdo exclusivo para membros</span>
             </div>
           </div>
         </div>
@@ -1088,8 +1000,8 @@
 <!-- ========== SCRIPTS ========== -->
 <script>
 var bioExpanded = false;
-var bioFull = 'Tudo que eu não posto em nenhum outro lugar tá aqui. Fotos, vídeos e bastidores todos os dias. Só pra quem assina 🔒';
-var bioShort = 'Tudo que eu não posto em nenhum outro lugar tá aqui. Vem espiar...';
+var bioFull = 'Rotina real sem edição: treino, alimentação, suplementação, moda fitness e bastidores do dia a dia. Conteúdo exclusivo atualizado toda semana 💪';
+var bioShort = 'Minha rotina completa que eu não posto em nenhum outro lugar. Treino, dieta e lifestyle exclusivo.';
 
 function toggleBio() {
   bioExpanded = !bioExpanded;
