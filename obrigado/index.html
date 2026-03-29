@@ -641,6 +641,77 @@
       line-height: 1.4;
     }
 
+    .btn-analysis:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .analysis-spinner {
+      display: inline-block;
+      width: 1.125rem;
+      height: 1.125rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .analysis-result {
+      margin-top: 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .analysis-result.visible { display: block; }
+
+    .analysis-result h2 {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.375rem;
+      border-bottom: 1px solid rgba(59,130,246,0.15);
+    }
+
+    .analysis-result h2:first-child { margin-top: 0; }
+
+    .analysis-result p {
+      font-size: 0.9375rem;
+      color: var(--foreground);
+      line-height: 1.65;
+      margin-bottom: 0.5rem;
+    }
+
+    .analysis-result ul, .analysis-result ol {
+      padding-left: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .analysis-result li {
+      font-size: 0.9375rem;
+      color: var(--foreground);
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+
+    .analysis-result strong { color: var(--accent-light); }
+
+    .analysis-error {
+      color: #fca5a5;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 0.75rem;
+      min-height: 1.25rem;
+    }
+
     @media (min-width: 480px) {
       .download-grid { grid-template-columns: repeat(2, 1fr); }
       .form-row { grid-template-columns: 1fr 1fr; }
@@ -999,11 +1070,13 @@
         <label class="form-label">Restrições ou observações</label>
         <textarea class="form-textarea" id="aNotes" placeholder="Lesões, restrições alimentares, horário disponível para treinar..."></textarea>
       </div>
-      <button type="submit" class="btn-analysis">
+      <button type="submit" class="btn-analysis" id="btnAnalysis">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Enviar para análise
+        Gerar minha análise com IA
       </button>
-      <p class="form-note">Suas informações serão enviadas via Telegram e respondidas em até 48h.</p>
+      <p class="form-note">A IA analisa seu perfil e gera recomendações personalizadas em segundos.</p>
+      <div class="analysis-error" id="analysisError"></div>
+      <div class="analysis-result" id="analysisResult"></div>
     </form>
   </div>
 
@@ -1521,29 +1594,76 @@
   });
 })();
 
-function sendAnalysis(e) {
+async function sendAnalysis(e) {
   e.preventDefault();
-  var name = document.getElementById('aName').value.trim();
-  var age = document.getElementById('aAge').value;
-  var weight = document.getElementById('aWeight').value;
-  var height = document.getElementById('aHeight').value;
-  var goal = document.getElementById('aGoal').value;
-  var level = document.getElementById('aLevel').value;
-  var notes = document.getElementById('aNotes').value.trim();
+  var btn = document.getElementById('btnAnalysis');
+  var errorEl = document.getElementById('analysisError');
+  var resultEl = document.getElementById('analysisResult');
 
-  var msg = '*Análise Pessoal - Privadão*\n\n'
-    + 'Nome: ' + name + '\n'
-    + 'Idade: ' + age + ' anos\n'
-    + 'Peso: ' + weight + 'kg\n'
-    + 'Altura: ' + height + 'cm\n'
-    + 'Objetivo: ' + goal + '\n'
-    + 'Nível: ' + level + '\n'
-    + (notes ? 'Obs: ' + notes : '');
+  var payload = {
+    name: document.getElementById('aName').value.trim(),
+    age: document.getElementById('aAge').value,
+    weight: document.getElementById('aWeight').value,
+    height: document.getElementById('aHeight').value,
+    goal: document.getElementById('aGoal').value,
+    level: document.getElementById('aLevel').value,
+    notes: document.getElementById('aNotes').value.trim()
+  };
 
-  var encoded = encodeURIComponent(msg);
-  window.open('https://t.me/+PkFKtaQaN8czYWQx', '_blank');
-  alert('Copie as informações abaixo e envie no canal do Telegram:\n\n' + msg);
+  btn.disabled = true;
+  btn.innerHTML = '<span class="analysis-spinner"></span> Analisando seu perfil...';
+  errorEl.textContent = '';
+  resultEl.classList.remove('visible');
+  resultEl.innerHTML = '';
+
+  try {
+    var res = await fetch('/api/analise-pessoal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    var data = await res.json();
+
+    if (!res.ok || data.error) {
+      errorEl.textContent = data.error || 'Erro ao gerar análise. Tente novamente.';
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise com IA';
+      return false;
+    }
+
+    resultEl.innerHTML = markdownToHtml(data.analysis);
+    resultEl.classList.add('visible');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Análise gerada!';
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar nova análise';
+    }, 5000);
+  } catch (err) {
+    errorEl.textContent = 'Erro de conexão. Tente novamente.';
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise com IA';
+  }
   return false;
+}
+
+function markdownToHtml(md) {
+  var html = md
+    .replace(/## (.+)/g, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^\- (.+)/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/s, function(m) {
+      return '<ul>' + m + '</ul>';
+    })
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  if (html.indexOf('<p>') === -1) html = '<p>' + html + '</p>';
+  html = html.replace(/<p><h2>/g, '<h2>').replace(/<\/h2><\/p>/g, '</h2>');
+  html = html.replace(/<p><ul>/g, '<ul>').replace(/<\/ul><\/p>/g, '</ul>');
+  html = html.replace(/<p><br>/g, '<p>').replace(/<br><\/p>/g, '</p>');
+  return html;
 }
 </script>
 

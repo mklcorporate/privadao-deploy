@@ -453,6 +453,107 @@ async function processMangofy(body) {
 }
 
 // ---------------------------------------------------------------------------
+// Rota: POST /api/analise-pessoal  (IA via OpenAI gpt-4o-mini)
+// ---------------------------------------------------------------------------
+const analysisRateLimit = new Map();
+
+app.post('/api/analise-pessoal', async (req, res) => {
+  const apiKey = cleanEnv('OPENAI_API_KEY');
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Serviço de análise indisponível no momento.' });
+  }
+
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  const windowMs = 10 * 60 * 1000;
+  const maxRequests = 3;
+
+  const entry = analysisRateLimit.get(ip) || { count: 0, start: now };
+  if (now - entry.start > windowMs) {
+    entry.count = 0;
+    entry.start = now;
+  }
+  entry.count++;
+  analysisRateLimit.set(ip, entry);
+
+  if (entry.count > maxRequests) {
+    return res.status(429).json({ error: 'Você já fez várias análises. Aguarde 10 minutos para tentar novamente.' });
+  }
+
+  const { name, age, weight, height, goal, level, notes } = req.body || {};
+  if (!name || !age || !weight || !height || !goal || !level) {
+    return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+  }
+
+  const systemPrompt = `Você é um personal trainer e nutricionista fitness experiente, motivacional e direto. 
+Responda SEMPRE em português do Brasil. 
+Baseado nos dados do usuário, forneça uma análise personalizada com EXATAMENTE estas 4 seções usando os títulos abaixo:
+
+## Avaliação Geral
+(Analise o perfil: IMC, classificação física, pontos de atenção)
+
+## Treino Recomendado
+(Sugira uma divisão de treino semanal adequada ao nível e objetivo, com exercícios específicos)
+
+## Dieta Sugerida
+(Monte um plano alimentar resumido: café, lanche, almoço, lanche da tarde, jantar. Inclua estimativa de calorias e macros)
+
+## Dicas Extras
+(3-5 dicas práticas e motivacionais personalizadas para o objetivo)
+
+Seja prático, use linguagem acessível, e motive a pessoa. Não use disclaimers médicos longos.`;
+
+  const userMsg = `Nome: ${name}
+Idade: ${age} anos
+Peso: ${weight}kg
+Altura: ${height}cm
+Objetivo: ${goal}
+Nível de experiência: ${level}
+Observações: ${notes || 'Nenhuma'}`;
+
+  try {
+    const aiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMsg },
+        ],
+        max_tokens: 1500,
+        temperature: 0.7,
+      }),
+      signal: AbortSignal.timeout(30000),
+    });
+
+    if (!aiRes.ok) {
+      const errBody = await aiRes.text();
+      console.error('[analise-pessoal] OpenAI erro:', aiRes.status, errBody);
+      return res.status(502).json({ error: 'Erro ao gerar análise. Tente novamente em alguns segundos.' });
+    }
+
+    const data = await aiRes.json();
+    const content = data.choices?.[0]?.message?.content || '';
+
+    if (!content) {
+      return res.status(502).json({ error: 'Resposta vazia da IA. Tente novamente.' });
+    }
+
+    res.json({ analysis: content });
+  } catch (err) {
+    console.error('[analise-pessoal] Erro:', err.message);
+    if (err.name === 'TimeoutError') {
+      return res.status(504).json({ error: 'A análise demorou demais. Tente novamente.' });
+    }
+    res.status(500).json({ error: 'Erro interno ao processar análise.' });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Rota: GET /api/logout
 // ---------------------------------------------------------------------------
 app.get('/api/logout', (req, res) => {
