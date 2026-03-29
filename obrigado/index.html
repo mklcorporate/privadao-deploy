@@ -1072,9 +1072,9 @@
       </div>
       <button type="submit" class="btn-analysis" id="btnAnalysis">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Gerar minha análise com IA
+        Gerar minha análise personalizada
       </button>
-      <p class="form-note">A IA analisa seu perfil e gera recomendações personalizadas em segundos.</p>
+      <p class="form-note">Receba recomendações de treino e dieta personalizadas em segundos.</p>
       <div class="analysis-error" id="analysisError"></div>
       <div class="analysis-result" id="analysisResult"></div>
     </form>
@@ -1627,7 +1627,7 @@ async function sendAnalysis(e) {
     if (!res.ok || data.error) {
       errorEl.textContent = data.error || 'Erro ao gerar análise. Tente novamente.';
       btn.disabled = false;
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise com IA';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise personalizada';
       return false;
     }
 
@@ -1643,7 +1643,7 @@ async function sendAnalysis(e) {
   } catch (err) {
     errorEl.textContent = 'Erro de conexão. Tente novamente.';
     btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise com IA';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gerar minha análise personalizada';
   }
   return false;
 }
