@@ -31,7 +31,7 @@ async function authGuard(req, res, next) {
   const token = req.cookies?.insideclub_session;
 
   if (!token) {
-    return res.redirect('/?login=1');
+    return res.redirect('/vendas?login=1');
   }
 
   try {
@@ -39,7 +39,7 @@ async function authGuard(req, res, next) {
     next();
   } catch {
     res.clearCookie('insideclub_session', { path: '/' });
-    res.redirect('/?login=1');
+    res.redirect('/vendas?login=1');
   }
 }
 
