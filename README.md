@@ -1,8 +1,8 @@
-# Privadao
+# InsideClub
 
 Site de conteudo exclusivo com verificacao de compra via email.
 
-**Dominio:** `privadao.com` (sem www)
+**Dominio:** `insideclub.com.br` (sem www)
 **VPS:** Hostinger KVM 2 (2 vCPU, 8GB RAM, 100GB SSD) — Ubuntu 24.04 LTS
 **IP:** `187.77.59.240`
 **SSH:** `ssh root@187.77.59.240`
@@ -142,7 +142,7 @@ certbot certificates
 ## SSL / HTTPS
 
 - **Provedor:** Let's Encrypt (certbot + plugin nginx)
-- **Dominio:** `privadao.com` (sem www)
+- **Dominio:** `insideclub.com.br` (sem www)
 - **Renovacao:** Cron automatico todo dia as 3h
 - **Fallback:** Certificado auto-assinado caso Let's Encrypt falhe
 - **Retry:** Cron a cada 6h se o cert inicial falhar
@@ -204,8 +204,9 @@ certbot certificates
 
 | Dominio           | Uso                              |
 |-------------------|----------------------------------|
-| `privadao.com`    | Site principal (VPS Hostinger)    |
-| `privadao.com.br` | Antigo checkout Mangofy           |
+| `insideclub.com.br` | Site principal (VPS Hostinger)    |
+| `privadao.com`      | Dominio antigo (desativado)       |
+| `privadao.com.br`   | Antigo checkout Mangofy           |
 
 ---
 
@@ -224,10 +225,10 @@ certbot certificates
 
 | Problema                    | Solucao                                                        |
 |-----------------------------|----------------------------------------------------------------|
-| Site "nao seguro"           | Cron retry resolve em ate 6h. Ou: `ssh root@187.77.59.240 "certbot --nginx -d privadao.com --non-interactive --agree-tos --email admin@privadao.com --redirect"` |
+| Site "nao seguro"           | Cron retry resolve em ate 6h. Ou: `ssh root@187.77.59.240 "certbot --nginx -d insideclub.com.br --non-interactive --agree-tos --email admin@insideclub.com.br --redirect"` |
 | Site lento                  | Imagens muito grandes? Otimize. Nginx ja serve static com cache |
 | Erro 502 Bad Gateway        | Node caiu. `ssh root@187.77.59.240 "pm2 restart privadao"`     |
-| Webhook nao funciona        | Verifique: `https://privadao.com/api/diagnostico`               |
-| Email nao encontrado        | Teste: `curl -X POST https://privadao.com/api/diagnostico-email -H "Content-Type: application/json" -d '{"email":"teste@email.com"}'` |
+| Webhook nao funciona        | Verifique: `https://insideclub.com.br/api/diagnostico`               |
+| Email nao encontrado        | Teste: `curl -X POST https://insideclub.com.br/api/diagnostico-email -H "Content-Type: application/json" -d '{"email":"teste@email.com"}'` |
 | SSH recusado                | Chave SSH pode ter sido perdida (VPS recriada). Recriar com post-install script restaura. |
 | deploy.sh nao funciona      | Verifique SSH: `ssh root@187.77.59.240 "echo ok"`              |

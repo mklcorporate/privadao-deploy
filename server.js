@@ -28,7 +28,7 @@ app.use(cookieParser());
 // Auth middleware para /obrigado
 // ---------------------------------------------------------------------------
 async function authGuard(req, res, next) {
-  const token = req.cookies?.privadao_session;
+  const token = req.cookies?.insideclub_session;
 
   if (!token) {
     return res.redirect('/?login=1');
@@ -38,7 +38,7 @@ async function authGuard(req, res, next) {
     await jwtVerify(token, JWT_SECRET);
     next();
   } catch {
-    res.clearCookie('privadao_session', { path: '/' });
+    res.clearCookie('insideclub_session', { path: '/' });
     res.redirect('/?login=1');
   }
 }
@@ -190,7 +190,7 @@ app.post('/api/verificar-email', async (req, res) => {
         .sign(JWT_SECRET);
 
       const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
-      res.cookie('privadao_session', token, {
+      res.cookie('insideclub_session', token, {
         httpOnly: true,
         sameSite: 'Lax',
         maxAge: 86400 * 1000,
@@ -557,7 +557,7 @@ Observações: ${notes || 'Nenhuma'}`;
 // Rota: GET /api/logout
 // ---------------------------------------------------------------------------
 app.get('/api/logout', (req, res) => {
-  res.clearCookie('privadao_session', { path: '/' });
+  res.clearCookie('insideclub_session', { path: '/' });
   res.redirect('/');
 });
 
@@ -578,5 +578,5 @@ app.use(express.static(__dirname, {
 // Start
 // ---------------------------------------------------------------------------
 app.listen(PORT, () => {
-  console.log(`Privadao rodando na porta ${PORT}`);
+  console.log(`InsideClub rodando na porta ${PORT}`);
 });

@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo ""
-echo -e "${YELLOW}=== Privadao Deploy ===${NC}"
+echo -e "${YELLOW}=== InsideClub Deploy ===${NC}"
 echo ""
 
 # 1. Verifica se tem alteracoes nao commitadas
@@ -47,5 +47,5 @@ echo -e "${GREEN}  OK${NC}"
 
 echo ""
 echo -e "${GREEN}=== Deploy concluido com sucesso! ===${NC}"
-echo -e "Site: https://privadao.com"
+echo -e "Site: https://insideclub.com.br"
 echo ""
