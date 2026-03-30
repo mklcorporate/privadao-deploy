@@ -17,9 +17,9 @@ privadaovps/
 ├── package.json         # Dependencias Node.js
 ├── nginx.conf           # Config Nginx (referencia local)
 ├── deploy.sh            # Script de deploy rapido (via SSH)
-├── index.html           # Pagina publica (login com email)
+├── index.html           # Pagina de vendas (login com email)
 ├── obrigado/
-│   └── index.html       # Pagina protegida (conteudo exclusivo)
+│   └── index.html       # Area de membros (conteudo, treinos, dieta, analise pessoal)
 ├── images/              # Fotos e videos (~205MB)
 ├── css/                 # Estilos
 ├── js/                  # Scripts frontend
@@ -168,6 +168,7 @@ certbot certificates
 | `KIRVANO_WEBHOOK_SECRET`  | Secret webhook Kirvano                           |
 | `MANGOFY_API_KEY`         | API Key Mangofy                                  |
 | `MANGOFY_STORE_CODE`      | Store Code Mangofy                               |
+| `OPENAI_API_KEY`          | Chave API OpenAI (analise pessoal com gpt-4o-mini)|
 
 > Credenciais estao no `.env` local e no post-install script (ID 2968) da Hostinger.
 > Para alterar na VPS sem recriar: `ssh root@187.77.59.240 "nano /opt/privadao/.env"` e depois `pm2 restart privadao`.
@@ -183,6 +184,7 @@ certbot certificates
 | POST   | `/api/diagnostico-email`   | Testa verificacao de email especifico           |
 | POST   | `/api/webhook-kirvano`     | Webhook Kirvano (registra/remove compradores)   |
 | POST   | `/api/webhook-mangofy`     | Webhook Mangofy (registra/remove compradores)   |
+| POST   | `/api/analise-pessoal`     | Analise personalizada via OpenAI gpt-4o-mini    |
 | GET    | `/api/logout`              | Limpa cookie de sessao                         |
 
 ---
@@ -203,7 +205,7 @@ certbot certificates
 | Dominio           | Uso                              |
 |-------------------|----------------------------------|
 | `privadao.com`    | Site principal (VPS Hostinger)    |
-| `privadao.com.br` | Checkout Mangofy (nao mexer)      |
+| `privadao.com.br` | Antigo checkout Mangofy           |
 
 ---
 
